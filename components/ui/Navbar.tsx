@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 
-// shadcn/ui wrappers — adjust the paths if you use a different structure
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import {
@@ -15,12 +16,15 @@ import {
 import { ModeToggle } from "./dark-mode-toggle";
 
 export default function Navbar() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    // Use `sticky top-4` to make it "float" slightly from the viewport top
-    // Use a container to center and limit width (max-w-6xl)
     <div className="sticky top-4 z-50 pointer-events-none">
-      {/* pointer-events-none on outer container prevents blocking clicks on content edges;
-          inner bar uses pointer-events-auto so it still accepts interactions. */}
       <div className="mx-auto max-w-6xl px-4">
         <nav
           className="pointer-events-auto mx-auto flex w-full items-center justify-between gap-4 rounded-xl
@@ -31,12 +35,35 @@ export default function Navbar() {
           {/* Left: brand */}
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-md bg-gradient-to-br from-indigo-500 to-violet-500" />
+              {/* Placeholder until mounted to prevent hydration mismatch */}
+              {!mounted ? (
+                <div className="h-8 w-8 rounded-md bg-slate-200 dark:bg-slate-700" />
+              ) : resolvedTheme === "dark" ? (
+                <Image
+                  alt="logo"
+                  src="/Taskflow-white.png"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-md"
+                  priority
+                />
+              ) : (
+                <Image
+                  alt="logo"
+                  src="/Taskflow-dark.png"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 rounded-md"
+                  priority
+                />
+              )}
+
               <span className="font-medium text-slate-900 dark:text-slate-100">
                 TaskFlow
               </span>
             </Link>
-            {/* simple nav links (hidden on small screens) */}
+
+            {/* Nav links (hidden on small screens) */}
             <ul className="ml-4 hidden items-center gap-3 sm:flex">
               <li>
                 <Link
@@ -95,6 +122,7 @@ export default function Navbar() {
                 <DropdownMenuItem>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
             <ModeToggle />
           </div>
         </nav>

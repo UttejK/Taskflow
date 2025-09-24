@@ -27,11 +27,27 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Light mode favicon */}
+        <link
+          rel="icon"
+          href="/Taskflow-dark.png"
+          media="(prefers-color-scheme: light)"
+          type="image/png"
+        />
+        {/* Dark mode favicon */}
+        <link
+          rel="icon"
+          href="/Taskflow-white.png"
+          media="(prefers-color-scheme: dark)"
+          type="image/png"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <main>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="dark">
             <Navbar />
             {children}
           </ThemeProvider>
