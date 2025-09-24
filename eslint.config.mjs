@@ -19,6 +19,15 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    overrides: [
+      {
+        files: ["*.ts", "*.tsx"],
+        rules: {
+          "@typescript-eslint/no-require-imports": "off",
+          "@typescript-eslint/no-this-alias": "off",
+        },
+      },
+    ],
   },
 ];
 
