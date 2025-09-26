@@ -269,6 +269,7 @@ export default function ProjectsPage() {
                 <DialogFooter>
                   <div className="flex w-full justify-end gap-2">
                     <Button
+                      type="button"
                       variant="outline"
                       onClick={() => {
                         setIsAddOpen(false);
