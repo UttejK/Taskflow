@@ -1,19 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useTheme } from "next-themes";
-
-import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { ModeToggle } from "@/components/ui/dark-mode-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ModeToggle } from "./dark-mode-toggle";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Menu, X } from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const { resolvedTheme } = useTheme();
@@ -24,7 +30,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="sticky top-4 z-50 pointer-events-none">
+    <div className="sticky top-4 z-50 pointer-events-none pb-8">
       <div className="mx-auto max-w-6xl px-4">
         <nav
           className="pointer-events-auto mx-auto flex w-full items-center justify-between gap-4 rounded-xl
@@ -32,8 +38,70 @@ export default function Navbar() {
                      dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800/60"
           aria-label="Main navigation"
         >
-          {/* Left: brand */}
+          {/* Left: brand + mobile hamburger */}
           <div className="flex items-center gap-3">
+            {/* Mobile hamburger -> opens left sheet. Visible only on small screens */}
+            <div className="sm:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button
+                    aria-label="Open menu"
+                    className="inline-flex items-center justify-center rounded-md p-2 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    <Menu />
+                  </button>
+                </SheetTrigger>
+
+                {/* Sheet content appears from left */}
+                <SheetContent side="left" className="w-64 sm:w-72">
+                  <SheetHeader>
+                    <div className="flex items-center justify-between">
+                      <SheetTitle>Menu</SheetTitle>
+                    </div>
+                  </SheetHeader>
+
+                  <div className="mt-4 flex flex-col gap-2">
+                    <Link
+                      href="/projects"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                    >
+                      Projects
+                    </Link>
+
+                    <Link
+                      href="/dashboard"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                    >
+                      Dashboard
+                    </Link>
+
+                    <div className="border-t my-2" />
+
+                    {/* keep user related actions here for convenience on mobile */}
+                    <Link
+                      href="/profile"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      href="/settings"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                    >
+                      Settings
+                    </Link>
+
+                    <button
+                      className="mt-2 text-left rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                      // TODO: wire actual logout handler
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
             <Link href="/" className="flex items-center gap-3">
               {/* Placeholder until mounted to prevent hydration mismatch */}
               {!mounted ? (
@@ -75,14 +143,6 @@ export default function Navbar() {
               </li>
               <li>
                 <Link
-                  href="/calendar"
-                  className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300"
-                >
-                  Calendar
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/dashboard"
                   className="text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-300"
                 >
@@ -92,37 +152,35 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Right: actions */}
+          {/* Right: user avatar + dark mode toggle */}
           <div className="flex items-center gap-3">
-            <Button size="sm" variant="ghost" className="hidden sm:inline-flex">
-              New Task
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  aria-label="Open user menu"
-                  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Avatar>
-                    <div className="h-8 w-8 rounded-full bg-slate-400" />
-                  </Avatar>
-                  <span className="hidden text-sm font-medium sm:inline-block text-slate-800 dark:text-slate-100">
-                    Uttej
-                  </span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings">Settings</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+            {/* Desktop-only New Project removed as requested; keep avatar dropdown + dark toggle */}
+            <div className="hidden md:flex">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    aria-label="Open user menu"
+                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    <Avatar>
+                      <div className="h-8 w-8 rounded-full bg-slate-400" />
+                    </Avatar>
+                    <span className="hidden text-sm font-medium sm:inline-block text-slate-800 dark:text-slate-100">
+                      Uttej
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings">Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <ModeToggle />
           </div>
         </nav>
