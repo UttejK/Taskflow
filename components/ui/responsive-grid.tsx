@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProjectItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 // Next.js-friendly Responsive Grid component using Tailwind + shadcn/ui.
@@ -48,30 +49,32 @@ export default function ResponsiveGrid({
             {renderItem ? (
               renderItem(item)
             ) : (
-              <Card className="h-full">
-                {item.image && (
-                  <div className="h-40 w-full overflow-hidden rounded-t-md bg-slate-100">
-                    <div
-                      className="h-full w-full bg-center bg-cover"
-                      style={{ backgroundImage: `url(${item.image})` }}
-                      aria-hidden
-                    />
-                  </div>
-                )}
-                <CardHeader className="pt-4">
-                  <CardTitle className="text-sm">{item.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-xs text-muted-foreground">
-                    {item.description}
-                  </p>
-                  {item.meta && (
-                    <div className="mt-3 text-xs text-muted-foreground">
-                      {item.meta}
+              <Link href={`/projects/${item.id}`}>
+                <Card className="h-full">
+                  {item.image && (
+                    <div className="h-40 w-full overflow-hidden rounded-t-md bg-slate-100">
+                      <div
+                        className="h-full w-full bg-center bg-cover"
+                        style={{ backgroundImage: `url(${item.image})` }}
+                        aria-hidden
+                      />
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                  <CardHeader className="pt-4">
+                    <CardTitle className="text-sm">{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-xs text-muted-foreground">
+                      {item.description}
+                    </p>
+                    {item.meta && (
+                      <div className="mt-3 text-xs text-muted-foreground">
+                        {item.meta}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
             )}
           </motion.div>
         ))}
